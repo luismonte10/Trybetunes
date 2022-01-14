@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import Loading from './Loading';
+import Loading from '../components/Loading';
 import { createUser } from '../services/userAPI';
 
 const maxNameLength = 2;
