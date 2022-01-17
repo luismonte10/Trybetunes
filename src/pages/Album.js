@@ -28,7 +28,6 @@ class Album extends Component {
 
   render() {
     const { musicList, artistInfo } = this.state;
-    console.log(musicList);
     return (
       <div data-testid="page-album">
         <Header />
