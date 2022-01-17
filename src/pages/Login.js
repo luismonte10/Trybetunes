@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import Loading from '../components/Loading';
 import { createUser } from '../services/userAPI';
 
-const maxNameLength = 2;
+const minNameLength = 2;
 
 class Login extends Component {
   constructor() {
@@ -17,7 +17,6 @@ class Login extends Component {
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleButtonValidation = this.handleButtonValidation.bind(this);
-    //    this.handleCreateUser = this.handleCreateUser.bind(this);
   }
 
   handleNameInput({ target }) {
@@ -28,7 +27,7 @@ class Login extends Component {
 
   handleButtonValidation() {
     const { nameInput } = this.state;
-    if (nameInput.length > maxNameLength) {
+    if (nameInput.length > minNameLength) {
       this.setState({ isButtonDisabled: false });
     } else {
       this.setState({ isButtonDisabled: true });
