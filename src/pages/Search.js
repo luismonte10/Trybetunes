@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AlbumsCard from '../components/AlbumsCard';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import searchAlbumsAPIs from '../services/searchAlbumsAPI';
 
@@ -11,7 +11,8 @@ class Search extends Component {
     this.state = {
       nameInput: '',
       isButtonDisabled: true,
-      teste: false,
+      isAlbumFound: false,
+      saveNameInput: '',
       albumsList: [],
     };
 
@@ -22,6 +23,7 @@ class Search extends Component {
   handleNameInput({ target }) {
     this.setState({
       nameInput: target.value,
+      saveNameInput: target.value,
     }, () => this.handleButtonValidation());
   }
 
@@ -41,9 +43,9 @@ class Search extends Component {
       const APIResponse = await searchAlbumsAPIs(nameInput);
       if (APIResponse.length > 0) {
         this.setState({ albumsList: APIResponse });
-        this.setState({ nameInput: '', teste: false });
+        this.setState({ nameInput: '', isAlbumFound: false });
       } else {
-        this.setState({ teste: true });
+        this.setState({ isAlbumFound: true });
       }
     } catch (error) {
       console.log(error);
@@ -54,8 +56,9 @@ class Search extends Component {
     const {
       nameInput,
       isButtonDisabled,
-      teste,
+      isAlbumFound,
       albumsList,
+      saveNameInput,
     } = this.state;
 
     return (
@@ -81,12 +84,20 @@ class Search extends Component {
           </button>
         </form>
 
-        {teste && <p>Nenhum álbum foi encontrado</p>}
+        {isAlbumFound && <p>Nenhum álbum foi encontrado</p>}
+        {albumsList.length > 0 && <p>{`Resultado de álbuns de: ${saveNameInput}`}</p>}
         {
-          teste === false ? albumsList.map((album) => (<AlbumsCard
-            key={ album.collectionId }
-            album={ album }
-          />)) : null
+          albumsList.length > 0 && albumsList.map((album) => (
+            <Link
+              to={ `/album/${album.collectionId}` }
+              key={ album.collectionId }
+              data-testid={ `link-to-album-${album.collectionId}` }
+            >
+              <div>
+                <img src={ album.artworkUrl100 } alt={ album.collectionName } />
+                <p>{ album.collectionName }</p>
+              </div>
+            </Link>))
         }
       </div>
     );
