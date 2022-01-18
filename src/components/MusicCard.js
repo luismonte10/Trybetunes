@@ -59,7 +59,7 @@ class MusicCard extends Component {
             name={ `${trackId}` }
             data-testid={ `checkbox-music-${trackId}` }
             checked={ isChecked }
-            onChange={ this.handleAddSong }
+            onChange={ this.handleAddAndRemoveSong }
           />
           Favorita
         </label>
