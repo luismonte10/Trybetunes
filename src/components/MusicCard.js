@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 import Loading from './Loading';
 
 class MusicCard extends Component {
@@ -12,16 +12,31 @@ class MusicCard extends Component {
     };
   }
 
-  teste = async () => {
+  componentDidMount() {
+    this.handleGetFavoriteSongs();
+  }
+
+  handleGetFavoriteSongs = async () => {
+    const { music } = this.props;
+    this.setState({ isLoading: true });
+    const favoriteSongs = await getFavoriteSongs();
+    favoriteSongs.forEach((song) => {
+      if (song.trackId === music.trackId) this.setState({ isChecked: true });
+    });
+    this.setState({ isLoading: false });
+  }
+
+  handleAddAndRemoveSong = async () => {
     const { music } = this.props;
     const { isChecked } = this.state;
     this.setState({ isLoading: true });
     if (isChecked) {
       this.setState({ isChecked: false });
+      await removeSong(music);
     } else {
       this.setState({ isChecked: true });
+      await addSong(music);
     }
-    await addSong(music);
     this.setState({ isLoading: false });
   }
 
@@ -37,10 +52,6 @@ class MusicCard extends Component {
         <p>{ trackName }</p>
         <audio data-testid="audio-component" src={ previewUrl } controls>
           <track kind="captions" />
-          O seu navegador não suporta o elemento
-          {' '}
-          <code>audio</code>
-          .
         </audio>
         <label htmlFor={ `${trackId}` }>
           <input
@@ -48,7 +59,7 @@ class MusicCard extends Component {
             name={ `${trackId}` }
             data-testid={ `checkbox-music-${trackId}` }
             checked={ isChecked }
-            onChange={ this.teste }
+            onChange={ this.handleAddSong }
           />
           Favorita
         </label>

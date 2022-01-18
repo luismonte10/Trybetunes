@@ -35,7 +35,10 @@ class Album extends Component {
         <p data-testid="artist-name">{ artistInfo.artistName }</p>
         {
           musicList.filter((music) => music.kind === 'song')
-            .map((music) => <MusicCard key={ music.trackId } music={ music } />)
+            .map((music) => (<MusicCard
+              key={ music.trackId }
+              music={ music }
+            />))
         }
       </div>
     );
